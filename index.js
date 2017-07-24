@@ -43,7 +43,7 @@ exports.handler = (event, context, callback) => {
                     for (var line = 0; line < currentData.length; line++) {
                         console.log('read line: ',currentData[line]);
                         const line_data=currentData[line];
-                        if (line_data.indexOf("SalesOrderNumber")>0 || line_data.indexOf("DespatchTrackingNumber")>0 || line_data.length<3 )
+                        if (line_data.indexOf("SalesOrderNumber")>-1 || line_data.indexOf("DespatchTrackingNumber")>-1 || line_data.indexOf("---")>-1  || line_data.indexOf("Content")>-1 || line_data.length<3 )
                         {
                             // the header
                         }
@@ -81,6 +81,7 @@ exports.handler = (event, context, callback) => {
                 s3.putObject({
                     Bucket: bucket,
                     Key: key,
+                    Body: data.Body,
                     Metadata: data.Metadata
                 }, function(err) {
                     if(err) 
