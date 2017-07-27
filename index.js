@@ -130,8 +130,10 @@ function post_spree(host, orders)
 
         res.on('end', function() {
             console.log(responseString);
-            var responseObject = JSON.parse(responseString);
+            //var responseObject = JSON.parse(responseString);
             //success(responseObject);
+            console.log('posted to server done: ',host);
+
         });
     });
 
