@@ -11,7 +11,7 @@ const SPREE_UK_HOST = process.env.SPREE_UK_HOST;
 const SPREE_API_KEY = process.env.SPREE_API_KEY;
 
 exports.handler = (event, context, callback) => {
-    //console.log('Received event:', JSON.stringify(event, null, 2));
+    console.log('Received event with SPREE_API_KEY: ', SPREE_API_KEY);
 
     // Get the object from the event and show its content type
     const bucket = event.Records[0].s3.bucket.name;
@@ -100,7 +100,7 @@ exports.handler = (event, context, callback) => {
 function post_spree(host, orders)
 {
     //const host= host; //'staging.naturalwellbeing.com';
-    const endpoint= '/api/shipments/batch_mark_shipped';
+    const endpoint= '/api/v1/shipments/batch_mark_shipped';
     const apiKey = SPREE_API_KEY;
 
     const https = require('https');
