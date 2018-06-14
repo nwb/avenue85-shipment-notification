@@ -8,6 +8,7 @@ const s3 = new aws.S3({ apiVersion: '2006-03-01' });
 
 const SPREE_HOST = process.env.SPREE_HOST;
 const SPREE_UK_HOST = process.env.SPREE_UK_HOST;
+const SPREE_EU_HOST = process.env.SPREE_EU_HOST;
 const SPREE_API_KEY = process.env.SPREE_API_KEY;
 
 exports.handler = (event, context, callback) => {
@@ -39,7 +40,9 @@ exports.handler = (event, context, callback) => {
                 const currentData = data.Body.toString().split(/(?:\r\n|\r|\n)/g);
                 if (currentData && currentData.length) {
                     const orders=[];
-                    const orders_uk=[]
+                    const orders_uk=[];
+                    const orders_eu=[];
+                    const orders_au=[];
                     for (var line = 0; line < currentData.length; line++) {
                         console.log('read line: ',currentData[line]);
                         const line_data=currentData[line];
@@ -55,12 +58,15 @@ exports.handler = (event, context, callback) => {
                             const service = rds[2];
                             const shipment= {
                                 id:order_id,
-                             trackingnumber:tracking_number,
-                            carrier_id:6
+                             trackingnumber:tracking_number
                         };
                            // console.log('parsed tracking: ', order_id + ' : ' + tracking_number + ' : ' + service);
                             if (order_id[0]=='4')
                               orders_uk.push(shipment);
+                            else if (order_id[0]=='6')
+                                orders_eu.push(shipment);
+                            else if (order_id[0]=='7')
+                                orders_au.push(shipment);
                             else
                               orders.push(shipment);
                         }
@@ -71,6 +77,11 @@ exports.handler = (event, context, callback) => {
 
                     if (orders_uk.length>0)
                         post_spree(SPREE_UK_HOST, orders_uk);
+
+                    if (orders_eu.length>0)
+                        post_spree(SPREE_EU_HOST, orders_eu);
+                    if (orders_au.length>0)
+                        post_spree(SPREE_AU_HOST, orders_au);
                 }
 
 
